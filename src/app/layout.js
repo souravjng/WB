@@ -1,16 +1,16 @@
-'use client';
-
+// app/layout.js
 import './globals.css';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import { Providers } from './Providers';
+
+export const metadata = {
+  title: 'My E-commerce Site',
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased">
-        <Provider store={store}>
-          {children}
-        </Provider>
+      <body>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

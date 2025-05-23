@@ -1,24 +1,17 @@
+// redux/cartSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-const getInitialCart = () => {
-  if (typeof window === 'undefined') return [];
-  try {
-    const stored = localStorage.getItem('cart');
-    return stored ? JSON.parse(stored) : [];
-  } catch (e) {
-    console.error('Failed to parse cart from localStorage:', e);
-    return [];
-  }
-};
-
 const initialState = {
-  items: getInitialCart(),
+  items: [], // Don't load from localStorage here!
 };
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    setCart: (state, action) => {
+      state.items = action.payload;
+    },
     addToCart: (state, action) => {
       const item = state.items.find(i => i.id === action.payload.id);
       if (item) {
@@ -26,33 +19,21 @@ const cartSlice = createSlice({
       } else {
         state.items.push({ ...action.payload, quantity: 1 });
       }
-      try {
-        localStorage.setItem('cart', JSON.stringify(state.items));
-      } catch (e) {
-        console.error('Failed to save cart to localStorage:', e);
-      }
+      localStorage.setItem('cart', JSON.stringify(state.items));
     },
     removeFromCart: (state, action) => {
       state.items = state.items.filter(i => i.id !== action.payload);
-      try {
-        localStorage.setItem('cart', JSON.stringify(state.items));
-      } catch (e) {
-        console.error('Failed to update cart in localStorage:', e);
-      }
+      localStorage.setItem('cart', JSON.stringify(state.items));
     },
     updateQuantity: (state, action) => {
       const item = state.items.find(i => i.id === action.payload.id);
       if (item) {
         item.quantity = action.payload.quantity;
       }
-      try {
-        localStorage.setItem('cart', JSON.stringify(state.items));
-      } catch (e) {
-        console.error('Failed to update cart quantity in localStorage:', e);
-      }
+      localStorage.setItem('cart', JSON.stringify(state.items));
     },
   },
 });
 
-export const { addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
+export const { setCart, addToCart, removeFromCart, updateQuantity } = cartSlice.actions;
 export default cartSlice.reducer;

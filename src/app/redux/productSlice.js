@@ -1,3 +1,4 @@
+// redux/productSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import img1 from '../assets/bag.png';
 import img2 from '../assets/camera.png';

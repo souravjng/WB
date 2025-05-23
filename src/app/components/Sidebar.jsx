@@ -8,21 +8,19 @@ const categories = ['All', 'Electronics', 'Clothing', 'Home', 'Accessories'];
 const MIN = 0;
 const MAX = 1000;
 
-const Sidebar = ({ products, setFilteredProducts }) => {
+const Sidebar = ({ products = [], onFiltered }) => {
   const [filters, setFilters] = useState({
     category: 'All',
     price: '',
     priceRange: [MIN, MAX],
   });
 
-  // Handle filter updates
-  const onFilterChange = (key, value) => {
+  const updateFilter = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const clearPriceInput = () => onFilterChange('price', '');
+  const clearPriceInput = () => updateFilter('price', '');
 
-  // Apply filters to the products
   useEffect(() => {
     let filtered = [...products];
 
@@ -30,18 +28,18 @@ const Sidebar = ({ products, setFilteredProducts }) => {
       filtered = filtered.filter((p) => p.category === filters.category);
     }
 
-    filtered = filtered.filter(
-      (p) =>
-        p.price >= filters.priceRange[0] &&
-        p.price <= filters.priceRange[1]
-    );
-
     if (filters.price !== '') {
       filtered = filtered.filter((p) => p.price <= filters.price);
+    } else {
+      filtered = filtered.filter(
+        (p) =>
+          p.price >= filters.priceRange[0] &&
+          p.price <= filters.priceRange[1]
+      );
     }
 
-    setFilteredProducts(filtered);
-  }, [filters, products, setFilteredProducts]);
+    onFiltered(filtered);
+  }, [filters, products, onFiltered]);
 
   const renderCategoryOptions = (name, selected) =>
     categories.map((cat) => (
@@ -51,7 +49,7 @@ const Sidebar = ({ products, setFilteredProducts }) => {
           name={name}
           value={cat}
           checked={selected === cat}
-          onChange={() => onFilterChange('category', cat)}
+          onChange={() => updateFilter('category', cat)}
           className="w-4 h-4 accent-blue-800"
         />
         <span>{cat}</span>
@@ -75,7 +73,7 @@ const Sidebar = ({ products, setFilteredProducts }) => {
             min={MIN}
             max={MAX}
             values={filters.priceRange}
-            onChange={(values) => onFilterChange('priceRange', values)}
+            onChange={(values) => updateFilter('priceRange', values)}
             renderTrack={({ props, children }) => (
               <div
                 {...props}
@@ -93,12 +91,16 @@ const Sidebar = ({ products, setFilteredProducts }) => {
                 {children}
               </div>
             )}
-            renderThumb={({ props }) => (
-              <div
-                {...props}
-                className="h-4 w-4 rounded-full bg-white border-2 border-blue-600 shadow-md"
-              />
-            )}
+            renderThumb={({ props, index }) => {
+              const { key, ...rest } = props;
+              return (
+                <div
+                  key={key || index}
+                  {...rest}
+                  className="h-4 w-4 rounded-full bg-white border-2 border-blue-600 shadow-md"
+                />
+              );
+            }}
           />
           <div className="flex justify-between text-xs mt-2">
             <span>{filters.priceRange[0]}</span>
@@ -109,7 +111,6 @@ const Sidebar = ({ products, setFilteredProducts }) => {
 
       <div className="bg-white text-black rounded-2xl p-6 border border-gray-300 space-y-4 w-[300px] ml-2 h-[400px] mt-4">
         <h2 className="text-lg font-bold">Category 2</h2>
-
         <div className="space-y-2">
           {renderCategoryOptions('category-second', filters.category)}
         </div>
@@ -124,7 +125,7 @@ const Sidebar = ({ products, setFilteredProducts }) => {
             value={filters.price}
             onChange={(e) => {
               const val = e.target.value;
-              onFilterChange('price', val ? parseInt(val) : '');
+              updateFilter('price', val ? parseInt(val) : '');
             }}
             placeholder="Enter max price"
             className="w-full border border-gray-300 rounded px-3 py-1 text-sm pr-8 h-[40px]"
