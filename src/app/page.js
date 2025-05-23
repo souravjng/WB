@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ProductCard } from './components/ProductCard';
 import { Header } from './components/Header';
+import Sidebar  from './components/Sidebar';
 import Footer from './components/Footer';
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
       <div className="min-h-screen bg-white">
         <Header />
         <div className="flex">
+          <Sidebar products={products} setFilteredProducts={setFilteredProducts} />
           <main className="flex-1 p-8">
             <h1 className="text-3xl font-bold mb-6">Product Listing</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
