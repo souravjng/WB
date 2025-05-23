@@ -1,8 +1,12 @@
+"use client"
 import Head from 'next/head';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { ProductCard } from './components/ProductCard';
 import { Header } from './components/Header';
 
 export default function Home() {
+  const products = useSelector((state) => state.products.products);
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   return (
@@ -11,12 +15,14 @@ export default function Home() {
         <title>Product Listing</title>
       </Head>
       <div className="min-h-screen bg-white">
-        <Header cartCount={8} />
+        <Header />
         <div className="flex">
           <main className="flex-1 p-8">
             <h1 className="text-3xl font-bold mb-6">Product Listing</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
             </div>
           </main>
         </div>

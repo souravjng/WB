@@ -7,7 +7,6 @@ const store = configureStore({
     cart: cartReducer,
     products: productReducer,
   },
-  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export default store;
