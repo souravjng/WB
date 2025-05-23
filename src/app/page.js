@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ProductCard } from './components/ProductCard';
 import { Header } from './components/Header';
+import Footer from './components/Footer';
 
 export default function Home() {
   const products = useSelector((state) => state.products.products);
@@ -26,6 +27,7 @@ export default function Home() {
             </div>
           </main>
         </div>
+        <Footer/>
       </div>
     </>
   );

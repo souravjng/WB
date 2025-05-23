@@ -1,4 +1,4 @@
-
+"use client"
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../redux/cartSlice';
 
